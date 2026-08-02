@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Gondava · AR</title>
+
+<!-- A-Frame + extras (animation-mixer para animaciones embebidas en glb) + MindAR -->
+<script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  /* ---- Nombre del proyecto ---- */
+  #top-bar {
+    flex: 0 0 auto;
+    background: #000;
+    text-align: center;
+    padding: 10px 0;
+  }
+  #top-bar h1 {
+    margin: 0;
+    color: #fff;
+    font-weight: bold;
+    font-size: 25px; /* max 25px */
+    letter-spacing: 1px;
+  }
+
+  /* ---- Area de camara: cuadrada, ancho de pantalla ---- */
+  #camera-area {
+    position: relative;
+    width: 100vw;
+    height: 100vw; /* 1:1 */
+    background: #000;
+    overflow: hidden;
+    flex: 0 0 auto;
+  }
+  #camera-area a-scene {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  #scan-hint {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #fff;
+    font-size: 13px;
+    text-shadow: 0 0 4px #000;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* ---- Area de info ---- */
+  #info-area {
+    flex: 1 1 auto;
+    background: #000;
+    color: #fff;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  #info-placeholder {
+    color: #888;
+    font-size: 16px;
+  }
+  #dino-name {
+    margin: 0 0 12px 0;
+    font-size: 22px;
+  }
+  #items-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  #items-list li {
+    font-size: 18px;
+    padding: 6px 0;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header id="top-bar">
+    <h1>GONDAVA</h1>
+  </header>
+
+  <div id="camera-area">
+    <div id="scan-hint">Apuntá la cámara a una de las figuras</div>
+
+    <a-scene
+      mindar-image="imageTargetSrc: ./assets/targets/targets.mind; autoStart: true; uiScanning: yes; uiLoading: yes;"
+      embedded
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false">
+
+      <a-assets>
+        <a-asset-item id="asset-dino1" src="./assets/models/dino1.glb"></a-asset-item>
+        <a-asset-item id="asset-dino2" src="./assets/models/dino2.glb"></a-asset-item>
+        <a-asset-item id="asset-dino3" src="./assets/models/dino3.glb"></a-asset-item>
+        <a-asset-item id="asset-dino4" src="./assets/models/dino4.glb"></a-asset-item>
+        <a-asset-item id="asset-dino5" src="./assets/models/dino5.glb"></a-asset-item>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!-- targetIndex debe coincidir con el orden en que las imágenes fueron
+           compiladas dentro de targets.mind (0 = primera imagen, etc.) -->
+
+      <a-entity mindar-image-target="targetIndex: 0" data-dino-id="dino1">
+        <a-gltf-model
+          gltf-model="#asset-dino1"
+          position="0 -0.25 0"
+          rotation="0 0 0"
+          scale="0.05 0.05 0.05"
+          animation-mixer="loop: repeat; clampWhenFinished: true">
+        </a-gltf-model>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 1" data-dino-id="dino2">
+        <a-gltf-model
+          gltf-model="#asset-dino2"
+          position="0 -0.25 0"
+          rotation="0 0 0"
+          scale="0.05 0.05 0.05"
+          animation-mixer="loop: repeat; clampWhenFinished: true">
+        </a-gltf-model>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 2" data-dino-id="dino3">
+        <a-gltf-model
+          gltf-model="#asset-dino3"
+          position="0 -0.25 0"
+          rotation="0 0 0"
+          scale="0.05 0.05 0.05"
+          animation-mixer="loop: repeat; clampWhenFinished: true">
+        </a-gltf-model>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 3" data-dino-id="dino4">
+        <a-gltf-model
+          gltf-model="#asset-dino4"
+          position="0 -0.25 0"
+          rotation="0 0 0"
+          scale="0.05 0.05 0.05"
+          animation-mixer="loop: repeat; clampWhenFinished: true">
+        </a-gltf-model>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 4" data-dino-id="dino5">
+        <a-gltf-model
+          gltf-model="#asset-dino5"
+          position="0 -0.25 0"
+          rotation="0 0 0"
+          scale="0.05 0.05 0.05"
+          animation-mixer="loop: repeat; clampWhenFinished: true">
+        </a-gltf-model>
+      </a-entity>
+
+    </a-scene>
+  </div>
+
+  <div id="info-area">
+    <p id="info-placeholder">Escaneá una figura para ver su información.</p>
+    <div id="info-content" style="display:none;">
+      <h2 id="dino-name">—</h2>
+      <ul id="items-list">
+        <li id="item-1">Item 1</li>
+        <li id="item-2">Item 2</li>
+        <li id="item-3">Item 3</li>
+        <li id="item-4">Item 4</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ------------------------------------------------------------------
+  // Estructura de datos placeholder. Reemplazar "name" e "items" con la
+  // info real de cada dino cuando esté disponible.
+  // ------------------------------------------------------------------
+  const DINO_DATA = {
+    dino1: { name: "Dino 1", items: ["Item 1", "Item 2", "Item 3", "Item 4"] },
+    dino2: { name: "Dino 2", items: ["Item 1", "Item 2", "Item 3", "Item 4"] },
+    dino3: { name: "Dino 3", items: ["Item 1", "Item 2", "Item 3", "Item 4"] },
+    dino4: { name: "Dino 4", items: ["Item 1", "Item 2", "Item 3", "Item 4"] },
+    dino5: { name: "Dino 5", items: ["Item 1", "Item 2", "Item 3", "Item 4"] },
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const scanHint = document.getElementById('scan-hint');
+    const infoPlaceholder = document.getElementById('info-placeholder');
+    const infoContent = document.getElementById('info-content');
+    const dinoNameEl = document.getElementById('dino-name');
+    const itemEls = [1, 2, 3, 4].map(n => document.getElementById('item-' + n));
+
+    function showInfo(dinoId) {
+      const data = DINO_DATA[dinoId];
+      if (!data) return;
+      dinoNameEl.textContent = data.name;
+      data.items.forEach((text, i) => {
+        if (itemEls[i]) itemEls[i].textContent = text;
+      });
+      infoPlaceholder.style.display = 'none';
+      infoContent.style.display = 'block';
+      if (scanHint) scanHint.style.display = 'none';
+    }
+
+    function hideInfo() {
+      infoPlaceholder.style.display = 'block';
+      infoContent.style.display = 'none';
+      if (scanHint) scanHint.style.display = 'block';
+    }
+
+    document.querySelectorAll('[mindar-image-target]').forEach(entity => {
+      const dinoId = entity.getAttribute('data-dino-id');
+      entity.addEventListener('targetFound', () => showInfo(dinoId));
+      entity.addEventListener('targetLost', () => hideInfo());
+    });
+  });
+</script>
+</body>
+</html>
