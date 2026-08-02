@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Gondava · AR</title>
+<title>GondavAR</title>
 
 <!-- A-Frame + extras (animation-mixer para animaciones embebidas en glb) + MindAR -->
 <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
@@ -36,7 +36,7 @@
   }
   #top-bar h1 {
     margin: 0;
-    color: white;
+    color: #fff;
     font-weight: lighter;
     font-size: 16px; /* max 16px */
     letter-spacing: 1px;
@@ -54,6 +54,17 @@
   #camera-area a-scene {
     width: 100% !important;
     height: 100% !important;
+  }
+  /* MindAR inserta el <video> y el <canvas> dentro del a-scene: los forzamos
+     a llenar el contenedor cuadrado y no desbordarse */
+  #camera-area video,
+  #camera-area canvas {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
   }
   #scan-hint {
     position: absolute;
@@ -106,7 +117,7 @@
     <div id="scan-hint">Apuntá la cámara a una de las figuras</div>
 
     <a-scene
-      mindar-image="imageTargetSrc: ./assets/targets/targets.mind; autoStart: true; uiScanning: yes; uiLoading: yes;"
+      mindar-image="imageTargetSrc: ./assets/targets/targets.mind; autoStart: true; uiScanning: no; uiLoading: no; uiError: no;"
       embedded
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
@@ -236,6 +247,19 @@
       const dinoId = entity.getAttribute('data-dino-id');
       entity.addEventListener('targetFound', () => showInfo(dinoId));
       entity.addEventListener('targetLost', () => hideInfo());
+    });
+
+    // Como desactivamos la UI nativa de MindAR (uiLoading/uiError),
+    // manejamos nosotros mismos el estado inicial y los errores de cámara.
+    const sceneEl = document.querySelector('a-scene');
+    if (scanHint) scanHint.textContent = 'Iniciando cámara...';
+
+    sceneEl.addEventListener('arReady', () => {
+      if (scanHint) scanHint.textContent = 'Apuntá la cámara a una de las figuras';
+    });
+
+    sceneEl.addEventListener('arError', () => {
+      if (scanHint) scanHint.textContent = 'No se pudo acceder a la cámara. Revisá los permisos.';
     });
   });
 </script>
