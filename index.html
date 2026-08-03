@@ -11,12 +11,36 @@
 
 <style>
   html, body { margin: 0; padding: 0; height: 100%; }
+
+  /* Pantalla inicial: fondo negro, solo el boton de play centrado */
+  #start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* por encima del canvas de a-scene */
+  }
+  #play-button {
+    width: 25vw;
+    max-width: 120px;
+    min-width: 64px;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
 
+<div id="start-screen">
+  <img id="play-button" src="./play.png" alt="">
+</div>
+
 <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets/targets.mind; autoStart: true;"
+    mindar-image="imageTargetSrc: ./assets/targets/targets.mind; autoStart: false;"
   color-space="sRGB"
   renderer="colorManagement: true, physicallyCorrectLights: true, toneMapping: NoToneMapping, exposure: 5"
   vr-mode-ui="enabled: false"
@@ -24,11 +48,14 @@
 
   
   <a-assets>
-    <a-asset-item id="asset-dino1" src="./assets/models/dino1.glb"></a-asset-item>
-    <a-asset-item id="asset-dino2" src="./assets/models/dino2.glb"></a-asset-item>
-    <a-asset-item id="asset-dino3" src="./assets/models/dino3.glb"></a-asset-item>
-    <a-asset-item id="asset-dino4" src="./assets/models/dino4.glb"></a-asset-item>
-    <a-asset-item id="asset-dino5" src="./assets/models/dino5.glb"></a-asset-item>
+    <!-- El ?v=1 al final de cada src es la clave anti-cache: subilo (v=2, v=3...)
+         cada vez que reemplaces un .glb para forzar al navegador a descargar
+         el archivo nuevo en vez de servir el que tenia guardado. -->
+    <a-asset-item id="asset-dino1" src="./assets/models/dino1.glb?v=1"></a-asset-item>
+    <a-asset-item id="asset-dino2" src="./assets/models/dino2.glb?v=1"></a-asset-item>
+    <a-asset-item id="asset-dino3" src="./assets/models/dino3.glb?v=1"></a-asset-item>
+    <a-asset-item id="asset-dino4" src="./assets/models/dino4.glb?v=1"></a-asset-item>
+    <a-asset-item id="asset-dino5" src="./assets/models/dino5.glb?v=1"></a-asset-item>
   </a-assets>
 
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -87,6 +114,26 @@
   </a-entity>
 
 </a-scene>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sceneEl = document.querySelector('a-scene');
+    const startScreen = document.getElementById('start-screen');
+    const playButton = document.getElementById('play-button');
+    let arSystem;
+
+    sceneEl.addEventListener('loaded', () => {
+      arSystem = sceneEl.systems['mindar-image-system'];
+    });
+
+    playButton.addEventListener('click', () => {
+      startScreen.style.display = 'none';
+      if (arSystem) {
+        arSystem.start(); // arranca la camara + tracking
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
