@@ -6,6 +6,10 @@
 <meta name="theme-color" content="#000000">
 <title>gondavAR</title>
 
+<!-- TEMPORAL: consola de debug visible en el celular. Sacar esto despues de encontrar el problema. -->
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+
 <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -20,7 +24,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #000;
+    background: #000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -41,7 +45,7 @@
 </div>
 
 <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets/targets.mind?v=3; autoStart: false;"
+    mindar-image="imageTargetSrc: ./assets/targets/targets.mind?v=4; autoStart: false;"
   color-space="sRGB"
   renderer="colorManagement: true, physicallyCorrectLights: true, toneMapping: NoToneMapping, exposure: 5"
   vr-mode-ui="enabled: false"
@@ -52,11 +56,11 @@
     <!-- El ?v=1 al final de cada src es la clave anti-cache: subilo (v=2, v=3...)
          cada vez que reemplaces un .glb para forzar al navegador a descargar
          el archivo nuevo en vez de servir el que tenia guardado. -->
-    <a-asset-item id="asset-dino1" src="./assets/models/dino1.glb?v=3"></a-asset-item>
-    <a-asset-item id="asset-dino2" src="./assets/models/dino2.glb?v=3"></a-asset-item>
-    <a-asset-item id="asset-dino3" src="./assets/models/dino3.glb?v=3"></a-asset-item>
-    <a-asset-item id="asset-dino4" src="./assets/models/dino4.glb?v=3"></a-asset-item>
-    <a-asset-item id="asset-dino5" src="./assets/models/dino5.glb?v=3"></a-asset-item>
+    <a-asset-item id="asset-dino1" src="./assets/models/dino1.glb?v=4"></a-asset-item>
+    <a-asset-item id="asset-dino2" src="./assets/models/dino2.glb?v=1"></a-asset-item>
+    <a-asset-item id="asset-dino3" src="./assets/models/dino3.glb?v=1"></a-asset-item>
+    <a-asset-item id="asset-dino4" src="./assets/models/dino4.glb?v=1"></a-asset-item>
+    <a-asset-item id="asset-dino5" src="./assets/models/dino5.glb?v=1"></a-asset-item>
   </a-assets>
 
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -89,7 +93,7 @@
       gltf-model="#asset-dino3"
       position="0 0 0"
       rotation="90 0 0"
-      scale="0.2 0.2 0.2"
+     scale="0.2 0.2 0.2"
       animation-mixer="loop: repeat">
     </a-gltf-model>
   </a-entity>
