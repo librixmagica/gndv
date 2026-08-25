@@ -5,17 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#000000">
 <title>gondavAR</title>
-
 <!-- A-Frame y A-Frame Extras -->
 <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
-
 <!-- AR.js para A-Frame -->
 <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
 <style>
   html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-
   /* Pantalla inicial: fondo negro, solo el boton de play centrado */
   #start-screen {
     position: fixed;
@@ -38,11 +34,9 @@
 </style>
 </head>
 <body>
-
 <div id="start-screen">
   <img id="play-button" src="./play.png" alt="Play">
 </div>
-
 <a-scene
   embedded
   arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_matrix; matrixCodeType: 3x3;"
@@ -50,7 +44,6 @@
   renderer="precision: mediump; alpha: true; antialias: true;"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
-
   <a-assets>
     <!-- El ?v=1 al final de cada src es la clave anti-cache -->
     <a-asset-item id="asset-dino1" src="./assets/models/dino1.glb?v=5"></a-asset-item>
@@ -59,7 +52,6 @@
     <a-asset-item id="asset-dino4" src="./assets/models/dino4.glb?v=1"></a-asset-item>
     <a-asset-item id="asset-dino5" src="./assets/models/dino5.glb?v=1"></a-asset-item>
   </a-assets>
-
   <!-- Dino 1 (Barcode 0) -->
   <a-marker type="barcode" value="0">
     <a-gltf-model
@@ -70,7 +62,6 @@
       animation-mixer="loop: repeat">
     </a-gltf-model>
   </a-marker>
-
   <!-- Dino 2 (Barcode 1) -->
   <a-marker type="barcode" value="1">
     <a-gltf-model
@@ -81,7 +72,6 @@
       animation-mixer="loop: repeat">
     </a-gltf-model>
   </a-marker>
-
   <!-- Dino 3 (Barcode 2) -->
   <a-marker type="barcode" value="2">
     <a-gltf-model
@@ -92,7 +82,6 @@
       animation-mixer="loop: repeat">
     </a-gltf-model>
   </a-marker>
-
   <!-- Dino 4 (Barcode 3) -->
   <a-marker type="barcode" value="3">
     <a-gltf-model
@@ -103,7 +92,6 @@
       animation-mixer="loop: repeat">
     </a-gltf-model>
   </a-marker>
-
   <!-- Dino 5 (Barcode 4) -->
   <a-marker type="barcode" value="4">
     <a-gltf-model
@@ -114,15 +102,24 @@
       animation-mixer="loop: repeat">
     </a-gltf-model>
   </a-marker>
-
   <a-entity camera></a-entity>
-
 </a-scene>
-
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const startScreen = document.getElementById('start-screen');
     const playButton = document.getElementById('play-button');
+
+    // AR.js no tiene un start()/stop() manual tan directo como MindAR.
+    // La forma confiable de "apagar" la camara al volver atras es cortar
+    // los tracks del <video> que AR.js crea, y para volver a arrancarla
+    // limpio, recargamos la pagina -- para una app tipo kiosco/exhibicion
+    // esto es aceptable y evita dejar la camara consumiendo bateria de fondo.
+    function stopCamera() {
+      const video = document.querySelector('video');
+      if (video && video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+      }
+    }
 
     playButton.addEventListener('click', () => {
       startScreen.style.display = 'none';
@@ -130,10 +127,14 @@
     });
 
     window.addEventListener('popstate', () => {
+      stopCamera();
       startScreen.style.display = 'flex';
+      // Recargamos para que la proxima vez que le den play, arranque
+      // una camara nueva y limpia (AR.js no soporta reiniciar el
+      // tracking en caliente de forma confiable).
+      setTimeout(() => location.reload(), 50);
     });
   });
 </script>
-
 </body>
 </html>
