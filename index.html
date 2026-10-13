@@ -2,12 +2,35 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GNDVAR</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aframe-gesture-component/dist/aframe-gesture-component.min.js"></script>
     <style>
-
+      #btn-play {
+        position: fixed;
+        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 87px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        z-index: 10;
+        -webkit-tap-highlight-color: transparent;
+      }
+      #btn-play img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        pointer-events: none;
+      }
+      #btn-play:active {
+        transform: translateX(-50%) scale(0.92);
+      }
     </style>
   </head>
   <body>
@@ -27,5 +50,26 @@
       <a-sky color=black></a-sky>
       
     </a-scene>
+
+    <button id="btn-play" aria-label="Rugido">
+      <img src="play.png" alt="Play">
+    </button>
+
+    <script>
+      const rugido = new Audio('rex.wav');
+      rugido.preload = 'auto';
+
+      const btn = document.getElementById('btn-play');
+
+      // Evita que el toque en el botón llegue al gesture-handler del modelo
+      ['touchstart', 'touchmove', 'touchend'].forEach(ev =>
+        btn.addEventListener(ev, e => e.stopPropagation(), { passive: true })
+      );
+
+      btn.addEventListener('click', () => {
+        rugido.currentTime = 0;
+        rugido.play().catch(err => console.error('No se pudo reproducir:', err));
+      });
+    </script>
   </body>
 </html>
