@@ -2,17 +2,26 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>GNDVAR</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aframe-gesture-component/dist/aframe-gesture-component.min.js"></script>
     <style>
+      #logo {
+        position: fixed;
+        top: calc(24px + env(safe-area-inset-top, 0px));
+        left: calc(24px + env(safe-area-inset-left, 0px));
+        width: 100px;
+        height: 87px;
+        object-fit: contain;
+        pointer-events: none;
+        z-index: 10;
+      }
       #btn-play {
         position: fixed;
         bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-        left: 50%;
-        transform: translateX(-50%);
+        right: calc(24px + env(safe-area-inset-right, 0px));
         width: 100px;
         height: 87px;
         padding: 0;
@@ -29,7 +38,7 @@
         pointer-events: none;
       }
       #btn-play:active {
-        transform: translateX(-50%) scale(0.92);
+        transform: scale(0.92);
       }
     </style>
   </head>
@@ -54,6 +63,8 @@
      <a-sky color=black></a-sky>
       
     </a-scene>
+
+    <img id="logo" src="logo.png" alt="Logo">
 
     <button id="btn-play" aria-label="Rugido">
       <img src="play.png" alt="Play">
